@@ -1,0 +1,135 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard - Mini Flask CRM{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="mb-0">
+        <i class="fas fa-tachometer-alt me-2"></i>Admin Dashboard
+    </h1>
+    <span class="badge bg-primary">Welcome, {{ session.admin_username }}!</span>
+</div>
+
+<!-- Statistics Cards -->
+<div class="row mb-4">
+    <div class="col-md-6 col-lg-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <i class="fas fa-users fa-2x text-primary mb-2"></i>
+                <h3 class="card-title">{{ total_customers }}</h3>
+                <p class="card-text text-muted">Total Customers</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-lg-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <i class="fas fa-calendar-day fa-2x text-success mb-2"></i>
+                <h3 class="card-title">{{ recent_customers|length }}</h3>
+                <p class="card-text text-muted">Recent Customers</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-lg-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <i class="fas fa-chart-line fa-2x text-info mb-2"></i>
+                <h3 class="card-title">100%</h3>
+                <p class="card-text text-muted">System Uptime</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-lg-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <i class="fas fa-shield-alt fa-2x text-warning mb-2"></i>
+                <h3 class="card-title">Secure</h3>
+                <p class="card-text text-muted">System Status</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="row mb-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-bolt me-2"></i>Quick Actions
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <a href="{{ url_for('customer_create') }}" class="btn btn-primary">
+                        <i class="fas fa-plus me-2"></i>Add New Customer
+                    </a>
+                    <a href="{{ url_for('admin_customer_list') }}" class="btn btn-outline-primary">
+                        <i class="fas fa-list me-2"></i>View All Customers
+                    </a>
+                    <a href="{{ url_for('customer_list') }}" class="btn btn-outline-secondary">
+                        <i class="fas fa-eye me-2"></i>View Public Interface
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-clock me-2"></i>Recent Customers
+                </h5>
+            </div>
+            <div class="card-body">
+                {% if recent_customers %}
+                    <div class="list-group list-group-flush">
+                        {% for customer in recent_customers %}
+                        <div class="list-group-item d-flex justify-content-between align-items-start">
+                            <div class="ms-2 me-auto">
+                                <div class="fw-bold">{{ customer.name }}</div>
+                                <small class="text-muted">{{ customer.email }}</small>
+                            </div>
+                            <small class="text-muted">
+                                {{ customer.created_at.strftime('%m/%d') }}
+                            </small>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <div class="mt-3">
+                        <a href="{{ url_for('admin_customer_list') }}" class="btn btn-sm btn-outline-primary">
+                            View All <i class="fas fa-arrow-right ms-1"></i>
+                        </a>
+                    </div>
+                {% else %}
+                    <p class="text-muted mb-0">No customers yet. Add some to get started!</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- System Information -->
+<div class="card">
+    <div class="card-header">
+        <h5 class="card-title mb-0">
+            <i class="fas fa-info-circle me-2"></i>System Information
+        </h5>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6">
+                <p><strong>Application:</strong> Mini Flask CRM</p>
+                <p><strong>Version:</strong> 1.0.0</p>
+                <p><strong>Framework:</strong> Flask</p>
+            </div>
+            <div class="col-md-6">
+                <p><strong>Database:</strong> SQLite</p>
+                <p><strong>Admin User:</strong> {{ session.admin_username }}</p>
+                <p><strong>Status:</strong> <span class="badge bg-success">Active</span></p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
