@@ -184,6 +184,39 @@ def mobile_dashboard():
                          new_this_month=new_this_month,
                          recent_customers=recent_customers)
 
+@app.route('/dashboard')
+def responsive_dashboard():
+    # Calculate analytics - same as mobile dashboard
+    total_customers = Customer.query.count()
+    
+    # Get date ranges
+    today = datetime.now().date()
+    week_ago = today - timedelta(days=7)
+    month_ago = today - timedelta(days=30)
+    
+    # Count new customers by time period
+    new_today = Customer.query.filter(
+        func.date(Customer.created_at) == today
+    ).count()
+    
+    new_this_week = Customer.query.filter(
+        Customer.created_at >= week_ago
+    ).count()
+    
+    new_this_month = Customer.query.filter(
+        Customer.created_at >= month_ago
+    ).count()
+    
+    # Get recent customers
+    recent_customers = Customer.query.order_by(Customer.created_at.desc()).limit(5).all()
+    
+    return render_template('responsive_dashboard.html',
+                         total_customers=total_customers,
+                         new_today=new_today,
+                         new_this_week=new_this_week,
+                         new_this_month=new_this_month,
+                         recent_customers=recent_customers)
+
 # Error handlers
 @app.errorhandler(404)
 def not_found(error):

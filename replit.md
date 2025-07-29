@@ -37,6 +37,7 @@ Preferred communication style: Simple, everyday language.
 - **main.py**: Application entry point
 - **templates/**: HTML templates for the user interface
   - **mobile_dashboard.html**: Mobile-optimized analytics dashboard
+  - **responsive_dashboard.html**: Responsive dashboard that adapts to all screen sizes
 
 ### Core Features
 1. **Customer Management**: CRUD operations for customer records
@@ -45,6 +46,8 @@ Preferred communication style: Simple, everyday language.
 4. **Form Validation**: Server-side validation with user-friendly error messages
 5. **CSRF Protection**: Security against cross-site request forgery attacks
 6. **Mobile Analytics Dashboard**: Touch-optimized view with summary analytics and key metrics
+7. **Responsive Design**: Bootstrap-based responsive layout that automatically adapts to mobile devices
+8. **Mobile Detection**: JavaScript-enhanced mobile experience with touch feedback and optimized interactions
 
 ## Data Flow
 
