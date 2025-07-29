@@ -36,6 +36,7 @@ Preferred communication style: Simple, everyday language.
 - **forms.py**: Form classes with validation rules
 - **main.py**: Application entry point
 - **templates/**: HTML templates for the user interface
+  - **mobile_dashboard.html**: Mobile-optimized analytics dashboard
 
 ### Core Features
 1. **Customer Management**: CRUD operations for customer records
@@ -43,6 +44,7 @@ Preferred communication style: Simple, everyday language.
 3. **Search Functionality**: Search customers by name, email, or phone
 4. **Form Validation**: Server-side validation with user-friendly error messages
 5. **CSRF Protection**: Security against cross-site request forgery attacks
+6. **Mobile Analytics Dashboard**: Touch-optimized view with summary analytics and key metrics
 
 ## Data Flow
 

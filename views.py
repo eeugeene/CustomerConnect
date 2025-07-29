@@ -2,7 +2,8 @@ from flask import render_template, request, redirect, url_for, flash, session, a
 from app import app, db
 from models import Customer, Admin
 from forms import CustomerForm, AdminLoginForm, DeleteConfirmForm
-from sqlalchemy import or_
+from sqlalchemy import or_, func
+from datetime import datetime, timedelta
 
 # Helper function to check admin authentication
 def is_admin_logged_in():
@@ -149,6 +150,39 @@ def admin_customer_list():
         customers = Customer.query.order_by(Customer.created_at.desc()).all()
     
     return render_template('customer_list.html', customers=customers, search=search, admin_view=True)
+
+@app.route('/mobile')
+def mobile_dashboard():
+    # Calculate analytics
+    total_customers = Customer.query.count()
+    
+    # Get date ranges
+    today = datetime.now().date()
+    week_ago = today - timedelta(days=7)
+    month_ago = today - timedelta(days=30)
+    
+    # Count new customers by time period
+    new_today = Customer.query.filter(
+        func.date(Customer.created_at) == today
+    ).count()
+    
+    new_this_week = Customer.query.filter(
+        Customer.created_at >= week_ago
+    ).count()
+    
+    new_this_month = Customer.query.filter(
+        Customer.created_at >= month_ago
+    ).count()
+    
+    # Get recent customers
+    recent_customers = Customer.query.order_by(Customer.created_at.desc()).limit(5).all()
+    
+    return render_template('mobile_dashboard.html',
+                         total_customers=total_customers,
+                         new_today=new_today,
+                         new_this_week=new_this_week,
+                         new_this_month=new_this_month,
+                         recent_customers=recent_customers)
 
 # Error handlers
 @app.errorhandler(404)

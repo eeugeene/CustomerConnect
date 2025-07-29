@@ -1,0 +1,221 @@
+{% extends "base.html" %}
+
+{% block title %}Mobile Dashboard - Mini Flask CRM{% endblock %}
+
+{% block content %}
+<div class="mobile-dashboard">
+    <!-- Header with greeting -->
+    <div class="text-center mb-4">
+        <h2 class="fw-light">
+            <i class="fas fa-chart-pie me-2"></i>Analytics Overview
+        </h2>
+        <p class="text-muted mb-0">Quick insights at a glance</p>
+    </div>
+
+    <!-- Key Metrics Cards - Mobile Optimized -->
+    <div class="row g-3 mb-4">
+        <div class="col-6">
+            <div class="card h-100 text-center border-0 shadow-sm">
+                <div class="card-body p-3">
+                    <div class="d-flex flex-column align-items-center">
+                        <div class="rounded-circle bg-primary bg-opacity-10 p-3 mb-2">
+                            <i class="fas fa-users fa-lg text-primary"></i>
+                        </div>
+                        <h3 class="mb-1 fw-bold">{{ total_customers }}</h3>
+                        <small class="text-muted">Total Customers</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-6">
+            <div class="card h-100 text-center border-0 shadow-sm">
+                <div class="card-body p-3">
+                    <div class="d-flex flex-column align-items-center">
+                        <div class="rounded-circle bg-success bg-opacity-10 p-3 mb-2">
+                            <i class="fas fa-user-plus fa-lg text-success"></i>
+                        </div>
+                        <h3 class="mb-1 fw-bold">{{ new_today }}</h3>
+                        <small class="text-muted">Added Today</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-6">
+            <div class="card h-100 text-center border-0 shadow-sm">
+                <div class="card-body p-3">
+                    <div class="d-flex flex-column align-items-center">
+                        <div class="rounded-circle bg-info bg-opacity-10 p-3 mb-2">
+                            <i class="fas fa-calendar-week fa-lg text-info"></i>
+                        </div>
+                        <h3 class="mb-1 fw-bold">{{ new_this_week }}</h3>
+                        <small class="text-muted">This Week</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-6">
+            <div class="card h-100 text-center border-0 shadow-sm">
+                <div class="card-body p-3">
+                    <div class="d-flex flex-column align-items-center">
+                        <div class="rounded-circle bg-warning bg-opacity-10 p-3 mb-2">
+                            <i class="fas fa-calendar-alt fa-lg text-warning"></i>
+                        </div>
+                        <h3 class="mb-1 fw-bold">{{ new_this_month }}</h3>
+                        <small class="text-muted">This Month</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Growth Chart (Simple Visual) -->
+    <div class="card mb-4 border-0 shadow-sm">
+        <div class="card-body p-3">
+            <h6 class="card-title mb-3">
+                <i class="fas fa-chart-line me-2"></i>Customer Growth
+            </h6>
+            <div class="progress-stacked mb-2" style="height: 30px;">
+                {% set total = new_this_month if new_this_month > 0 else 1 %}
+                <div class="progress" role="progressbar" style="width: {{ (new_today / total * 100) if new_today > 0 else 0 }}%">
+                    <div class="progress-bar bg-success"></div>
+                </div>
+                <div class="progress" role="progressbar" style="width: {{ ((new_this_week - new_today) / total * 100) if (new_this_week - new_today) > 0 else 0 }}%">
+                    <div class="progress-bar bg-info"></div>
+                </div>
+                <div class="progress" role="progressbar" style="width: {{ ((new_this_month - new_this_week) / total * 100) if (new_this_month - new_this_week) > 0 else 0 }}%">
+                    <div class="progress-bar bg-warning"></div>
+                </div>
+            </div>
+            <div class="d-flex justify-content-between small text-muted">
+                <span>Today</span>
+                <span>This Week</span>
+                <span>This Month</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="card mb-4 border-0 shadow-sm">
+        <div class="card-body p-3">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h6 class="card-title mb-0">
+                    <i class="fas fa-clock me-2"></i>Recent Activity
+                </h6>
+                <span class="badge bg-primary">{{ recent_customers|length }}</span>
+            </div>
+            
+            {% if recent_customers %}
+                <div class="list-group list-group-flush">
+                    {% for customer in recent_customers[:3] %}
+                    <div class="list-group-item px-0 py-2 border-0">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="d-flex align-items-center">
+                                <div class="rounded-circle bg-primary bg-opacity-10 p-2 me-3">
+                                    <i class="fas fa-user fa-sm text-primary"></i>
+                                </div>
+                                <div>
+                                    <div class="fw-medium">{{ customer.name }}</div>
+                                    <small class="text-muted">{{ customer.email }}</small>
+                                </div>
+                            </div>
+                            <small class="text-muted">
+                                {{ customer.created_at.strftime('%m/%d') }}
+                            </small>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="text-center py-3">
+                    <i class="fas fa-inbox fa-2x text-muted mb-2"></i>
+                    <p class="text-muted mb-0">No recent activity</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="card border-0 shadow-sm">
+        <div class="card-body p-3">
+            <h6 class="card-title mb-3">
+                <i class="fas fa-bolt me-2"></i>Quick Actions
+            </h6>
+            <div class="row g-2">
+                <div class="col-6">
+                    <a href="{{ url_for('customer_create') }}" class="btn btn-primary w-100">
+                        <i class="fas fa-plus mb-1 d-block"></i>
+                        <small>Add Customer</small>
+                    </a>
+                </div>
+                <div class="col-6">
+                    <a href="{{ url_for('customer_list') }}" class="btn btn-outline-primary w-100">
+                        <i class="fas fa-list mb-1 d-block"></i>
+                        <small>View All</small>
+                    </a>
+                </div>
+            </div>
+            
+            {% if session.admin_id %}
+            <div class="row g-2 mt-2">
+                <div class="col-6">
+                    <a href="{{ url_for('admin_dashboard') }}" class="btn btn-outline-secondary w-100">
+                        <i class="fas fa-tachometer-alt mb-1 d-block"></i>
+                        <small>Full Admin</small>
+                    </a>
+                </div>
+                <div class="col-6">
+                    <a href="{{ url_for('admin_logout') }}" class="btn btn-outline-danger w-100">
+                        <i class="fas fa-sign-out-alt mb-1 d-block"></i>
+                        <small>Logout</small>
+                    </a>
+                </div>
+            </div>
+            {% else %}
+            <div class="row g-2 mt-2">
+                <div class="col-12">
+                    <a href="{{ url_for('admin_login') }}" class="btn btn-outline-secondary w-100">
+                        <i class="fas fa-sign-in-alt mb-1 d-block"></i>
+                        <small>Admin Login</small>
+                    </a>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<style>
+.mobile-dashboard {
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.mobile-dashboard .card {
+    transition: transform 0.2s ease;
+}
+
+.mobile-dashboard .card:hover {
+    transform: translateY(-2px);
+}
+
+.mobile-dashboard .btn {
+    padding: 0.75rem 0.5rem;
+    font-size: 0.875rem;
+}
+
+.mobile-dashboard .progress-stacked {
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+@media (max-width: 576px) {
+    .mobile-dashboard {
+        max-width: 100%;
+        padding: 0 0.5rem;
+    }
+}
+</style>
+{% endblock %}
