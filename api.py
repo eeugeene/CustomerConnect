@@ -1,8 +1,8 @@
 
 import functools
 from flask import Blueprint, jsonify, request, session
-from .models import Customer, Admin
-from .app import db
+from models import Customer, Admin
+from app import db
 from datetime import datetime, timedelta
 from sqlalchemy import func
 

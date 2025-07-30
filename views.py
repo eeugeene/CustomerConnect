@@ -1,5 +1,5 @@
 from flask import render_template, request, redirect, url_for, flash, session, abort, Blueprint
-from app import db
+from app import app, db
 from models import Customer, Admin
 from forms import CustomerForm, AdminLoginForm, DeleteConfirmForm
 from sqlalchemy import or_, func

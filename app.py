@@ -34,7 +34,7 @@ db.init_app(app)
 csrf.init_app(app)
 
 # Import and register blueprints
-from views import bp as main_bp
+import views
 from api import api_bp
 app.register_blueprint(main_bp)
 app.register_blueprint(api_bp)
