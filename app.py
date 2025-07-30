@@ -16,7 +16,11 @@ db = SQLAlchemy(model_class=Base)
 csrf = CSRFProtect()
 
 # Create the app
-app = Flask(__name__)
+    # Import and register the API blueprint
+    from api import api_bp
+    app.register_blueprint(api_bp)
+
+    return app
 app.secret_key = os.environ.get("SESSION_SECRET", "dev-secret-key-change-in-production")
 app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
 
