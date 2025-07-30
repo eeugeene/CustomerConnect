@@ -16,11 +16,7 @@ db = SQLAlchemy(model_class=Base)
 csrf = CSRFProtect()
 
 # Create the app
-    # Import and register the API blueprint
-    from api import api_bp
-    app.register_blueprint(api_bp)
-
-    return app
+app = Flask(__name__)
 app.secret_key = os.environ.get("SESSION_SECRET", "dev-secret-key-change-in-production")
 app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
 
@@ -36,6 +32,12 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 # Initialize extensions
 db.init_app(app)
 csrf.init_app(app)
+
+# Import and register blueprints
+from views import bp as main_bp
+from api import api_bp
+app.register_blueprint(main_bp)
+app.register_blueprint(api_bp)
 
 with app.app_context():
     # Import models to ensure tables are created
@@ -54,6 +56,3 @@ with app.app_context():
         db.session.add(admin_user)
         db.session.commit()
         logging.info("Default admin user created: username=admin, password=admin123")
-
-# Import and register views
-import views
